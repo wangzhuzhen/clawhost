@@ -12,6 +12,7 @@ server:
     pullPolicy: IfNotPresent
   replicas: 1
   port: 18080
+  node_port: 31080
   resources:
     requests:
       cpu: 100m
@@ -27,6 +28,7 @@ adminToken: "change-me"
 postgresql:
   ## -- Set to false to use an external database
   enabled: true
+  initImage: busybox:1.36
   image:
     repository: postgres
     tag: 16-alpine

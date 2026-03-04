@@ -4,9 +4,13 @@ metadata:
   name: {{ include "fastclaw.fullname" . }}
   labels:
     {{- include "fastclaw.labels" . | nindent 4 }}
+    app.kubernetes.io/component: fastclaw
 spec:
+  type: NodePort
   selector:
     {{- include "fastclaw.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: fastclaw
   ports:
     - port: {{ .Values.server.port }}
       targetPort: {{ .Values.server.port }}
+      nodePort: {{ .Values.server.node_port }}

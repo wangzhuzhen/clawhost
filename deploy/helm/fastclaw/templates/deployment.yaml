@@ -9,16 +9,18 @@ spec:
   selector:
     matchLabels:
       {{- include "fastclaw.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: fastclaw
   template:
     metadata:
       labels:
         {{- include "fastclaw.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: fastclaw
     spec:
       serviceAccountName: {{ include "fastclaw.fullname" . }}
       {{- if .Values.postgresql.enabled }}
       initContainers:
         - name: wait-for-pg
-          image: busybox:1.36
+          image: {{ .Values.postgresql.initImage }}
           command: ['sh', '-c', 'until nc -z {{ include "fastclaw.fullname" . }}-pg 5432; do echo "waiting for postgres..."; sleep 2; done']
       {{- end }}
       containers:
