@@ -32,6 +32,7 @@ data:
 
     [openclaw]
     image = {{ .Values.openclaw.image | quote }}
+    init_image = {{ .Values.openclaw.initImage | quote }}
     {{- if .Values.openclaw.imagePullSecret }}
     image_pull_secret = {{ .Values.openclaw.imagePullSecret | quote }}
     {{- end }}

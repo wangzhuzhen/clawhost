@@ -74,6 +74,7 @@ domain:
 ## OpenClaw bot config
 openclaw:
   image: "1panel/openclaw:latest"
+  initImage: "alpine:3.19"
   imagePullSecret: ""
   gatewayPort: 18789
   cpuLimit: "2000m"
