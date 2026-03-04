@@ -37,6 +37,13 @@ data:
     image_pull_secret = {{ .Values.openclaw.imagePullSecret | quote }}
     {{- end }}
     gateway_port = {{ .Values.openclaw.gatewayPort }}
+    {{- if .Values.openclaw.allowedOrigins }}
+    allowed_origins = [
+    {{- range .Values.openclaw.allowedOrigins }}
+      "{{ . }}",
+    {{- end }}
+    ]
+    {{- end }}
     cpu_limit = {{ .Values.openclaw.cpuLimit | quote }}
     memory_limit = {{ .Values.openclaw.memoryLimit | quote }}
     cpu_request = {{ .Values.openclaw.cpuRequest | quote }}
