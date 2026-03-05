@@ -181,7 +181,7 @@ curl -s -X POST http://localhost:18080/bot/api/v1/bots \
 }'
 
 export BOT_ID="<id>"
-exporter BOT_ACCESS_TOKEN="<access_token>"
+export BOT_ACCESS_TOKEN="<access_token>"
 
 # 3. Start the Bot (creates K8s Deployment + Service)
 curl -X POST http://localhost:18080/bot/api/v1/bots/$BOT_ID/start \
