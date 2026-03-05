@@ -27,8 +27,8 @@ type MetaConfig struct {
 
 // ModelsConfig represents the models configuration
 type ModelsConfig struct {
-	Mode      string                        `json:"mode,omitempty"` // "merge" or "replace"
-	Providers map[string]*ProviderConfig    `json:"providers,omitempty"`
+	Mode      string                     `json:"mode,omitempty"` // "merge" or "replace"
+	Providers map[string]*ProviderConfig `json:"providers,omitempty"`
 }
 
 // ProviderConfig represents a single provider configuration
@@ -47,8 +47,16 @@ type ProviderModelConfig struct {
 	Name          string   `json:"name,omitempty"`
 	Reasoning     bool     `json:"reasoning,omitempty"`
 	Input         []string `json:"input,omitempty"`
+	Cost          *Cost    `json:"cost,omitempty"`
 	ContextWindow int      `json:"contextWindow,omitempty"`
 	MaxTokens     int      `json:"maxTokens,omitempty"`
+}
+
+type Cost struct {
+	Input      int64 `json:"input,omitempty"`
+	Output     int64 `json:"output,omitempty"`
+	CacheRead  int64 `json:"cacheRead,omitempty"`
+	CacheWrite int64 `json:"cacheWrite,omitempty"`
 }
 
 // AgentsConfig represents the agents configuration
@@ -58,12 +66,12 @@ type AgentsConfig struct {
 
 // AgentDefaultsConfig represents agent default settings
 type AgentDefaultsConfig struct {
-	Model         *AgentModelConfig            `json:"model,omitempty"`
-	Models        map[string]*AgentModelAlias  `json:"models,omitempty"`
-	Workspace     string                       `json:"workspace,omitempty"`
-	Compaction    *CompactionConfig            `json:"compaction,omitempty"`
-	MaxConcurrent int                          `json:"maxConcurrent,omitempty"`
-	Subagents     *SubagentsConfig             `json:"subagents,omitempty"`
+	Model         *AgentModelConfig           `json:"model,omitempty"`
+	Models        map[string]*AgentModelAlias `json:"models,omitempty"`
+	Workspace     string                      `json:"workspace,omitempty"`
+	Compaction    *CompactionConfig           `json:"compaction,omitempty"`
+	MaxConcurrent int                         `json:"maxConcurrent,omitempty"`
+	Subagents     *SubagentsConfig            `json:"subagents,omitempty"`
 }
 
 // AgentModelConfig represents the primary model configuration
@@ -93,17 +101,17 @@ type ChannelsConfig map[string]interface{}
 // ChannelConfig represents a single channel configuration
 type ChannelConfig struct {
 	Enabled        bool                   `json:"enabled,omitempty"`
-	BotToken       string                 `json:"botToken,omitempty"`       // Telegram, Discord
-	AppToken       string                 `json:"appToken,omitempty"`       // Slack
-	AppID          string                 `json:"appId,omitempty"`          // Feishu, Teams
-	AppSecret      string                 `json:"appSecret,omitempty"`      // Feishu
-	AppPassword    string                 `json:"appPassword,omitempty"`    // Teams
-	ChannelSecret  string                 `json:"channelSecret,omitempty"`  // LINE
-	DMPolicy       string                 `json:"dmPolicy,omitempty"`       // pairing, allowlist, open, disabled
-	GroupPolicy    string                 `json:"groupPolicy,omitempty"`    // open, allowlist, disabled
+	BotToken       string                 `json:"botToken,omitempty"`      // Telegram, Discord
+	AppToken       string                 `json:"appToken,omitempty"`      // Slack
+	AppID          string                 `json:"appId,omitempty"`         // Feishu, Teams
+	AppSecret      string                 `json:"appSecret,omitempty"`     // Feishu
+	AppPassword    string                 `json:"appPassword,omitempty"`   // Teams
+	ChannelSecret  string                 `json:"channelSecret,omitempty"` // LINE
+	DMPolicy       string                 `json:"dmPolicy,omitempty"`      // pairing, allowlist, open, disabled
+	GroupPolicy    string                 `json:"groupPolicy,omitempty"`   // open, allowlist, disabled
 	TextChunkLimit int                    `json:"textChunkLimit,omitempty"`
 	MediaMaxMb     int                    `json:"mediaMaxMb,omitempty"`
-	Extra          map[string]interface{} `json:"-"`                        // Additional fields
+	Extra          map[string]interface{} `json:"-"` // Additional fields
 }
 
 // MarshalJSON implements custom JSON marshaling for ChannelConfig
@@ -161,13 +169,18 @@ func (c *ChannelConfig) UnmarshalJSON(data []byte) error {
 
 // GatewayConfig represents gateway configuration
 type GatewayConfig struct {
-	Port           int                    `json:"port,omitempty"`
-	Mode           string                 `json:"mode,omitempty"` // local, remote
-	Bind           string                 `json:"bind,omitempty"` // loopback, lan
-	Auth           *GatewayAuthConfig     `json:"auth,omitempty"`
-	Tailscale      *TailscaleConfig       `json:"tailscale,omitempty"`
-	TrustedProxies []string               `json:"trustedProxies,omitempty"`
-	ControlUI      *ControlUIConfig       `json:"controlUi,omitempty"`
+	Port           int                `json:"port,omitempty"`
+	Mode           string             `json:"mode,omitempty"` // local, remote
+	Bind           string             `json:"bind,omitempty"` // loopback, lan
+	Auth           *GatewayAuthConfig `json:"auth,omitempty"`
+	Tailscale      *TailscaleConfig   `json:"tailscale,omitempty"`
+	TrustedProxies []string           `json:"trustedProxies,omitempty"`
+	ControlUI      *ControlUIConfig   `json:"controlUi,omitempty"`
+	Nodes          *Nodes             `json:"nodes,omitempty"`
+}
+
+type Nodes struct {
+	DenyCommands []string `json:"denyCommands,omitempty"`
 }
 
 // GatewayAuthConfig represents gateway authentication configuration
@@ -185,8 +198,10 @@ type TailscaleConfig struct {
 
 // ControlUIConfig represents control UI configuration
 type ControlUIConfig struct {
-	AllowedOrigins                []string `json:"allowedOrigins,omitempty"`
-	DangerouslyDisableDeviceAuth  bool     `json:"dangerouslyDisableDeviceAuth,omitempty"`
+	Enabled                      *bool    `json:"enabled,omitempty"`
+	AllowedOrigins               []string `json:"allowedOrigins,omitempty"`
+	DangerouslyDisableDeviceAuth bool     `json:"dangerouslyDisableDeviceAuth,omitempty"`
+	AllowInsecureAuth            *bool    `json:"allowInsecureAuth,omitempty"`
 }
 
 // AuthConfig represents authentication profiles configuration
@@ -223,8 +238,8 @@ type HooksConfig struct {
 
 // InternalHooksConfig represents internal hooks configuration
 type InternalHooksConfig struct {
-	Enabled bool                          `json:"enabled,omitempty"`
-	Entries map[string]*HookEntryConfig   `json:"entries,omitempty"`
+	Enabled bool                        `json:"enabled,omitempty"`
+	Entries map[string]*HookEntryConfig `json:"entries,omitempty"`
 }
 
 // HookEntryConfig represents a hook entry configuration

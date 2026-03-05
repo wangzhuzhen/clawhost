@@ -116,10 +116,22 @@ func ProxyToBot(c echo.Context) error {
 	// Start a poller to approve devices that become pending in the next ~16s
 	// (from WebUI JS requests that follow the initial page load).
 	accessToken := ""
-	if token := c.QueryParam("token"); token != "" && token == bot.AccessToken {
+	token := c.QueryParam("token")
+	if token != "" {
+		if token != bot.AccessToken {
+			return fmt.Errorf("invalid query param token")
+		}
 		accessToken = bot.AccessToken
-		go autoApprovePoller(bot.ID, accessToken)
+	} else {
+		accessToken = bot.AccessToken
 	}
+
+	go autoApprovePoller(bot.ID, accessToken)
+
+	//if token := c.QueryParam("token"); token != "" && token == bot.AccessToken {
+	//	accessToken = bot.AccessToken
+	//	go autoApprovePoller(bot.ID, accessToken)
+	//}
 
 	if bot.Status != model.BotStatusRunning {
 		return util.BadRequest(c, "bot is not running")
@@ -148,9 +160,16 @@ func ProxyToBot(c echo.Context) error {
 	}
 
 	// Regular HTTP proxy
+	// Connect to backend WebSocket
+	values, _ := url.ParseQuery(c.QueryString())
+	// 添加 token
+	values.Set("token", accessToken)
+
 	targetURL := &url.URL{
 		Scheme: "http",
 		Host:   targetHost,
+		//RawQuery: c.QueryString(),
+		RawQuery: values.Encode(),
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
@@ -244,11 +263,16 @@ func proxyWebSocket(c echo.Context, targetHost, path, botID, accessToken string)
 	defer clientConn.Close()
 
 	// Connect to backend WebSocket
+	values, _ := url.ParseQuery(c.QueryString())
+	// 添加 token
+	values.Set("token", accessToken)
+
 	backendURL := url.URL{
-		Scheme:   "ws",
-		Host:     targetHost,
-		Path:     path,
-		RawQuery: c.QueryString(),
+		Scheme: "ws",
+		Host:   targetHost,
+		Path:   path,
+		//RawQuery: c.QueryString(),
+		RawQuery: values.Encode(),
 	}
 
 	requestHeader := buildWSRequestHeaders(c, targetHost)

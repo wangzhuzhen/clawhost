@@ -109,10 +109,10 @@ func mergeConfigForModels(existing map[string]interface{}, config *BotConfig, se
 	}
 
 	gateway := map[string]interface{}{
-		"port":           gatewayPort,
-		"mode":           "local",
-		"bind":           "lan",
-		"auth":           authConfig,
+		"port": gatewayPort,
+		"mode": "local",
+		"bind": "lan",
+		"auth": authConfig,
 		"tailscale": map[string]interface{}{
 			"mode":        "off",
 			"resetOnExit": false,
@@ -339,6 +339,9 @@ func buildOpenClawConfig(config *BotConfig, setDefaultModel bool) string {
 	}
 	// Build controlUi section with dangerouslyDisableDeviceAuth and optional allowedOrigins
 	controlUiParts := `"dangerouslyDisableDeviceAuth": true`
+	controlUiParts += fmt.Sprintf(",\n      \"enabled\": true")
+	controlUiParts += fmt.Sprintf(",\n      \"dangerouslyAllowHostHeaderOriginFallback\": true")
+	controlUiParts += fmt.Sprintf(",\n      \"allowInsecureAuth\": true")
 	if allowedOrigins != "" {
 		controlUiParts += fmt.Sprintf(",\n      \"allowedOrigins\": %s", allowedOrigins)
 	}
