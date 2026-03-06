@@ -2,12 +2,14 @@ package model
 
 import (
 	"encoding/json"
+	"time"
 )
 
 // OpenClawConfig represents the full openclaw.json configuration format
 // This structure matches the openclaw configuration file format
 type OpenClawConfig struct {
 	Meta     *MetaConfig     `json:"meta,omitempty"`
+	Wizard   *WizardConfig   `json:"wizard,omitempty"`
 	Models   *ModelsConfig   `json:"models,omitempty"`
 	Agents   *AgentsConfig   `json:"agents,omitempty"`
 	Channels ChannelsConfig  `json:"channels,omitempty"`
@@ -17,12 +19,21 @@ type OpenClawConfig struct {
 	Messages *MessagesConfig `json:"messages,omitempty"`
 	Commands *CommandsConfig `json:"commands,omitempty"`
 	Hooks    *HooksConfig    `json:"hooks,omitempty"`
+	Skills   *SkillsConfig   `json:"skills,omitempty"`
 }
 
 // MetaConfig represents metadata about the configuration
 type MetaConfig struct {
 	LastTouchedVersion string `json:"lastTouchedVersion,omitempty"`
 	LastTouchedAt      string `json:"lastTouchedAt,omitempty"`
+}
+
+// WizardConfig represents wizard about the configuration
+type WizardConfig struct {
+	LastRunAt      time.Time `json:"lastRunAt,omitempty"`
+	LastRunVersion string    `json:"LastRunVersion,omitempty"`
+	LastRunCommand string    `json:"LastRunCommand,omitempty"`
+	LastRunMode    string    `json:"LastRunMode,omitempty"`
 }
 
 // ModelsConfig represents the models configuration
@@ -234,6 +245,11 @@ type CommandsConfig struct {
 // HooksConfig represents hooks configuration
 type HooksConfig struct {
 	Internal *InternalHooksConfig `json:"internal,omitempty"`
+}
+
+// HooksConfig represents skills configuration
+type SkillsConfig struct {
+	Install map[string]string
 }
 
 // InternalHooksConfig represents internal hooks configuration
