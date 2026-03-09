@@ -327,6 +327,12 @@ func getGatewayPort() int {
 // buildOpenClawConfig builds the openclaw.json configuration content
 // setDefaultModel: if true, also sets agents.defaults.model.primary (for first-time setup)
 func buildOpenClawConfig(config *BotConfig, setDefaultModel bool) string {
+	// 直接解析 Json 序列话/反序列化（如果解析失败再走后面的 硬编码拼凑配置逻辑）
+	occ := buildOpenClawConfigJson(config, true)
+	if occ != "" {
+		return occ
+	}
+
 	// Build gateway section with password or token auth
 	gatewayPort := getGatewayPort()
 	trustedProxies := getTrustedProxies()

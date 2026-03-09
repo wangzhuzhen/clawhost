@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/fastclaw-ai/fastclaw/middleware"
 	"github.com/fastclaw-ai/fastclaw/model"
@@ -15,6 +16,8 @@ func StartBot(c echo.Context) error {
 	if bot == nil {
 		return util.Forbidden(c, "not authorized")
 	}
+
+	fmt.Printf("StartBot with bot config=\n%s\n", string(bot.Config))
 
 	if bot.Status == model.BotStatusRunning {
 		return util.BadRequest(c, "bot is already running")

@@ -11,7 +11,7 @@ postgresql:
 server:
   image:
     repository: "registry.cn-hangzhou.aliyuncs.com/shinemo-test/fastclaw"
-    tag: "v20260306"
+    tag: "v20260309"
     pullPolicy: "Always"
   node_port: 31080
 
