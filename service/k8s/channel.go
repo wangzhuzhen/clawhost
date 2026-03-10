@@ -112,10 +112,10 @@ func AddChannelToBot(ctx context.Context, botID, accessToken, channel, account s
 
 // ChannelAccountInfo represents a channel account in the list
 type ChannelAccountInfo struct {
-	Channel  string                 `json:"channel"`
-	Account  string                 `json:"account"`
-	Status   string                 `json:"status"`
-	Config   map[string]interface{} `json:"config,omitempty"`
+	Channel string                 `json:"channel"`
+	Account string                 `json:"account"`
+	Status  string                 `json:"status"`
+	Config  map[string]interface{} `json:"config,omitempty"`
 }
 
 // ListBotChannels lists all configured channel accounts for a bot

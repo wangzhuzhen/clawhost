@@ -13,9 +13,10 @@ import (
 )
 
 // ListOptions returns list options for querying pods by bot ID
-func ListOptions(deploymentName string) metav1.ListOptions {
+func ListOptions(botId string) metav1.ListOptions {
 	return metav1.ListOptions{
-		LabelSelector: fmt.Sprintf("app=openclaw,bot-id=%s", extractBotID(deploymentName)),
+		//LabelSelector: fmt.Sprintf("app=openclaw,bot-id=%s", extractBotID(deploymentName)),
+		LabelSelector: fmt.Sprintf("app=openclaw,bot-id=%s", botId),
 	}
 }
 

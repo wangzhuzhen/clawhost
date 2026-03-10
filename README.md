@@ -155,16 +155,33 @@ curl -s -X POST http://localhost:18080/bot/api/v1/bots \
   -H "Authorization: Bearer $API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "user_id": "user-001",
-    "name": "my-bot",
-    "slug": "my-bot",
-    "config": {
-      "model": "claude-sonnet-4-20250514",
-      "api_key": "sk-ant-xxx"
-    }
-  }'
+          "user_id": "user-01",
+          "name": "my-bot-01",
+          "slug": "my-bot-01",
+          "config": {
+              "models": {
+                  "mode": "merge",
+                  "providers": {
+                      "tokenpony": {
+                          "baseUrl": "https://api.tokenpony.cn/v1",
+                          "apiKey": "sk-e29970********************121f52",
+                          "auth": "api-key",
+                          "authHeader": false,
+                          "api": "openai-completions",
+                          "models": [
+                              {
+                                  "id": "deepseek-v3-0324",
+                                  "name": "deepseek-v3-0324"
+                              }
+                          ]
+                      }
+                  }
+              }
+          }
+}'
 
 export BOT_ID="<id>"
+export BOT_ACCESS_TOKEN="<access_token>"
 
 # 3. Start the Bot (creates K8s Deployment + Service)
 curl -X POST http://localhost:18080/bot/api/v1/bots/$BOT_ID/start \
@@ -175,7 +192,7 @@ curl http://localhost:18080/bot/api/v1/bots/$BOT_ID/status \
   -H "Authorization: Bearer $API_TOKEN"
 
 # 5. Access via proxy
-curl http://localhost:18080/proxy/$BOT_ID/
+curl http://localhost:18080/proxy/$BOT_ID/?token=$BOT_ACCESS_TOKEN
 
 # Stop / Restart / Delete
 curl -X POST http://localhost:18080/bot/api/v1/bots/$BOT_ID/stop -H "Authorization: Bearer $API_TOKEN"

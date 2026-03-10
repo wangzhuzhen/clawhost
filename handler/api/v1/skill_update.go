@@ -57,8 +57,9 @@ func writeSkillToPod(ctx context.Context, botID, skillName, content string) erro
 	namespace := k8s.GetNamespace()
 
 	// Get pod name
-	deploymentName := k8s.GetDeploymentName(botID)
-	pods, err := client.CoreV1().Pods(namespace).List(ctx, k8s.ListOptions(deploymentName))
+	//deploymentName := k8s.GetDeploymentName(botID)
+	//pods, err := client.CoreV1().Pods(namespace).List(ctx, k8s.ListOptions(deploymentName))
+	pods, err := client.CoreV1().Pods(namespace).List(ctx, k8s.ListOptions(botID))
 	if err != nil {
 		return fmt.Errorf("failed to list pods: %w", err)
 	}

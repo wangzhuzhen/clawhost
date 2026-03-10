@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/clawhost/clawhost/middleware"
 	"github.com/clawhost/clawhost/model"
@@ -19,6 +20,8 @@ func StartBot(c echo.Context) error {
 	if bot.Status == model.BotStatusRunning {
 		return util.BadRequest(c, "bot is already running")
 	}
+
+	fmt.Printf("StartBot with bot config=\n%s\n", string(bot.Config))
 
 	ctx := context.Background()
 

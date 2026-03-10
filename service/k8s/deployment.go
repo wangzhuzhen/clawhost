@@ -97,6 +97,10 @@ func CreateDeployment(ctx context.Context, botID, userID, accessToken string, co
 	if image == "" {
 		image = "openclaw/openclaw:latest"
 	}
+	initImage := viper.GetString("openclaw.init_image")
+	if initImage == "" {
+		initImage = "alpine:3.19"
+	}
 	gatewayPort := viper.GetInt32("openclaw.gateway_port")
 	if gatewayPort == 0 {
 		gatewayPort = 18789
@@ -169,7 +173,7 @@ func CreateDeployment(ctx context.Context, botID, userID, accessToken string, co
 					InitContainers: []corev1.Container{
 						{
 							Name:    "init-permissions",
-							Image:   "alpine:3.19",
+							Image:   initImage,
 							Command: []string{"sh", "-c", "chown -R 1000:1000 /data && chmod -R 755 /data"},
 							VolumeMounts: []corev1.VolumeMount{
 								{

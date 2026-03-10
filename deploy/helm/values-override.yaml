@@ -1,0 +1,24 @@
+adminToken: "shinemo@2026"
+domain:
+  botDomain: "clawhost.loc"
+
+postgresql:
+  initImage: "registry.cn-hangzhou.aliyuncs.com/shinemo-test/busybox:1.36"
+  image:
+    repository: "registry.cn-hangzhou.aliyuncs.com/shinemo-test/postgres"
+    tag: "16-alpine"
+
+server:
+  image:
+    repository: "registry.cn-hangzhou.aliyuncs.com/shinemo-test/clawhost"
+    tag: "v20260309"
+    pullPolicy: "Always"
+  node_port: 31080
+
+openclaw:
+  image: "registry.cn-hangzhou.aliyuncs.com/shinemo-test/alpine_openclaw:2026.3.2"
+  initImage: "registry.cn-hangzhou.aliyuncs.com/shinemo-test/alpine:latest"
+  allowedOrigins:
+    - "http://localhost:18789"
+    - "http://127.0.0.1:18789"
+    - "http://10.2.14.244:31080"

@@ -4,9 +4,13 @@ metadata:
   name: {{ include "clawhost.fullname" . }}
   labels:
     {{- include "clawhost.labels" . | nindent 4 }}
+    app.kubernetes.io/component: clawhost
 spec:
+  type: NodePort
   selector:
     {{- include "clawhost.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: clawhost
   ports:
     - port: {{ .Values.server.port }}
       targetPort: {{ .Values.server.port }}
+      nodePort: {{ .Values.server.node_port }}
